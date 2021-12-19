@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>This is the Update Post page</h1>
+
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <fieldset>
+            {{ form.title.label }}
+            {{ form.title(class='form-control', placeholder='Add updated Title here.. (Leave blank if you want to keep the old one)') }}
+        </fieldset>
+        <fieldset>
+            {{ form.image.label }}
+            {{ form.image(class='form-control', placeholder='Add updated Image Url here.. (Leave blank if you want to keep the old one)') }}
+        </fieldset>
+        <fieldset>
+            {{ form.content.label }}
+            {{ form.content(class='form-control', placeholder='Add updated Caption here.. (Leave blank if you want to keep the old one)') }}
+        </fieldset>
+        {{ form.submit(class='btn btn-primary') }}
+    </div>
+    
+</form>
+
+{% endblock content %}
