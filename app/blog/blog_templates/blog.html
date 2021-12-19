@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>This is my Post Feed</h1>
+{% for p in posts %}
+<div class="instagram-rip-off">
+    <a class="card text-decoration-none text-dark" href='{{ url_for("blog.individualPost", id=p.id) }}' style="width: 40vw;">
+        <div class="card-body">
+          <h5 class="card-title">{{ p.title }}</h5>
+          <p class="card-text">{{ p.content }}</p>
+        </div>
+      </a>
+</div>
+{% endfor %}
+{% endblock content %}
