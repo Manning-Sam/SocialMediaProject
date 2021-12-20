@@ -10,9 +10,8 @@ blog = Blueprint('blog', __name__, template_folder='blog_templates')
 from app.models import db
 
 @blog.route('/feed')
-@login_required
 def blogHome():
-    posts = db.session.query(Post,User).filter(Post.user_id==User.id).all()
+    posts = db.session.query(Post,User).filter(Post.user_id==User.id).filter(Post.user_id!=2).order_by(Post.date_created.desc()).all()
     return render_template('blog.html', posts = posts)
 
 @blog.route('/posts/create/<int:id>', methods = ["GET","POST"])
@@ -91,6 +90,8 @@ def deletePost(id):
     if post.user_id != current_user.id:
         return redirect(url_for('blog.blogHome'))
     
-    db.session.delete(post)
+    post.content = "This post was removed by the user"
+    post.title = "[Deleted]"
+    post.user_id = 2
     db.session.commit()
     return redirect(url_for('blog.blogHome'))

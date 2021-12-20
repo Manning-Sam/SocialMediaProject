@@ -12,8 +12,45 @@
             </div>
           <h5 class="card-title">{{ p[0].title }}</h5>
           <p class="card-text">{{ p[0].content }}</p>
+{% if current_user.id == p[0].user_id %}
+          {% if p[0].child %}
+          <div>
+            <a class="card-link" href='{{ url_for("blog.individualPost", id = p[0].id) }}' style="width: 40vw;">See replies</a>
+          </div>
+          {% endif %}
+          <a class='btn btn-secondary' href='{{ url_for("blog.createPost", id = p[0].id) }}'>Comment on this Post</a>
+    
+    <a class='btn btn-primary' href='{{ url_for("blog.updatePost", id = p[0].id) }}'>Update Post</a>
+
+              
+    <!-- DELETE BUTTON -->
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Post</button>
+              
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this post? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                
+            <form action="{{ url_for('blog.deletePost', id=p[0].id) }}" method="POST">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
         </div>
       </a>
-</div>
+    </div>
 {% endfor %}
 {% endblock content %}
