@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+          
 <!DOCTYPE html>
 <html>
 <head>
@@ -132,13 +137,9 @@ input[type=submit]:hover {
   }
 }
 </style>
-</head>
-<body>
 
-<h2>Social Login Form</h2>
 
-<div class="container">
-  <form action="/action_page.php">
+<div class="container-Main">
     <div class="row">
       <h2 style="text-align:center">Login with Social Media or Manually</h2>
       <div class="vl">
@@ -184,7 +185,6 @@ input[type=submit]:hover {
       </div>
       
     </div>
-  </form>
 </div>
 
 <div class="bottom-container">
@@ -198,5 +198,5 @@ input[type=submit]:hover {
   </div>
 </div>
 
-</body>
-</html>
+
+{% endblock content %}
