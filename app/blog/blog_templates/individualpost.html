@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>This is my Individual Post Feed</h1>
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link active" href='{{ url_for("blog.blogHome")}}'>Back to Feed</a>
+  </li>
+  {% if post[0].parent %}
+  <li class="nav-item">
+    <a class="nav-link" href='{{ url_for("blog.individualPost", id=post[0].parent) }}'>Back to Above Post</a>
+    {% endif %}  
+  </li>
+</ul>
+
+<h1>This is my Individual Post Page</h1>
 <div class="instagram-rip-off">
     <div class="card" style="width: 40vw;">
         <div class="card-body">
@@ -11,12 +22,15 @@
             </div>
           <h5 class="card-title">{{ post[0].title }}</h5>
           <p class="card-text">{{ post[0].content }}</p>
+          {% if post[0].child %}
+            <a class="card-link" href='{{ url_for("blog.individualPost", id=post[0].id) }}' style="width: 40vw;">See replies</a>
+          {% endif %}
         </div>
       </div>
     </div>
     <a class='btn btn-secondary' href='{{ url_for("blog.createPost", id = post[0].id) }}'>Comment on this Post</a>
     {% if current_user.id == post[0].user_id %}
-    <a class='btn btn-secondary' href='{{ url_for("blog.updatePost", id = post[0].id) }}'>Update Post</a>
+    <a class='btn btn-primary' href='{{ url_for("blog.updatePost", id = post[0].id) }}'>Update Post</a>
 
     
 <!-- DELETE BUTTON -->
@@ -52,7 +66,7 @@
 
 
   <div class="comments">
-      <div class="card" style="width: 30vw;">
+      <div class="card" style="width: 40vw;">
           <div class="card-body">
             <div class="row">
             <h5 class="col">{{child[1].username}} replied:</h5>
@@ -61,7 +75,7 @@
             <h5 class="card-title">{{ child[0].title }}</h5>
             <p class="card-text">{{ child[0].content }}</p>
             {% if child[0].child %}
-            <a class="card text-decoration-none text-dark" href='{{ url_for("blog.individualPost", id=child[0].id) }}' style="width: 40vw;">See replies</a>
+            <a class="card-link" href='{{ url_for("blog.individualPost", id=child[0].id) }}' style="width: 40vw;">See replies</a>
             {% endif %}
           </div>
         </div>

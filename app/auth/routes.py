@@ -32,7 +32,7 @@ def logMeIn():
         
       
         login_user(user, remember = remember_me)
-        return redirect(url_for('auth.signMeUp'))
+        return redirect(url_for('blog.blogHome'))
     return render_template('login.html', form = form)
 
 @auth.route('/signup', methods=["GET", "POST"])
