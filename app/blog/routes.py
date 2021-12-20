@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 
 from .forms import CreatePostForm
 
-from app.models import Post, User, Likes, Dislikes
+from app.models import Post, User, Votes, Dislikes
 
 blog = Blueprint('blog', __name__, template_folder='blog_templates')
 
@@ -12,7 +12,7 @@ from app.models import db
 @blog.route('/feed')
 def blogHome():
     posts = db.session.query(Post,User).filter(Post.user_id==User.id).filter(Post.user_id!=2).order_by(Post.date_created.desc()).all()
-    likes = Likes.query.all()
+    likes = Votes.query.all()
     dislikes = Dislikes.query.all()
     return render_template('blog.html', posts = posts, likes = likes, dislikes = dislikes)
 
@@ -43,10 +43,9 @@ def createPost(id):
     return render_template('createpost.html', form = form)
 
 @blog.route('/blog/<int:id>')
-@login_required
 def individualPost(id):
     post = db.session.query(Post,User).filter(Post.user_id==User.id).filter(Post.id==id).first()
-    likes = Likes.query.all()
+    likes = Votes.query.all()
     dislikes = Dislikes.query.all()
     print(post)
     if post[0] is None:
@@ -102,3 +101,34 @@ def deletePost(id):
     post.score = 0
     db.session.commit()
     return redirect(url_for('blog.blogHome'))
+
+@blog.route('/blog/l/<int:id>')
+@login_required
+def likedPost(id):
+    like = Votes(current_user.id, id)
+    db.session.add(like)
+    return redirect(url_for('blog.individualPost', id=id))
+
+@blog.route('/blog/d/<int:id>')
+@login_required
+def dlikedPost(id):
+    dlike = Dislikes(current_user.id, id)
+    db.session.add(dlike)
+    db.session.commit()
+    return redirect(url_for('blog.individualPost', id=id))
+
+@blog.route('/blog/ul/<int:id><int:pid>')
+@login_required
+def unlikedPost(id):
+    like = Votes.query(id=id).first()
+    db.session.add(like)
+    db.session.commit()
+    return redirect(url_for('blog.individualPost', pid=id))    
+
+@blog.route('/blog/ud/<int:id><int:pid>')
+@login_required
+def undlikedPost(id):
+    dlike = Dislikes.query(id=id).first()
+    db.session.delete(dlike)
+    db.session.commit()
+    return redirect(url_for('blog.individualPost', pid=id))    

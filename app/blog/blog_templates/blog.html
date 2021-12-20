@@ -12,12 +12,13 @@
             </div>
           <h5 class="card-title">{{ p[0].title }}</h5>
           <p class="card-text">{{ p[0].content }}</p>
-{% if current_user.id == p[0].user_id %}
+
           {% if p[0].child %}
           <div>
             <a class="card-link" href='{{ url_for("blog.individualPost", id = p[0].id) }}' style="width: 40vw;">See replies</a>
           </div>
           {% endif %}
+          {% if current_user.id == p[0].user_id %}
           <a class='btn btn-secondary' href='{{ url_for("blog.createPost", id = p[0].id) }}'>Comment on this Post</a>
     
     <a class='btn btn-primary' href='{{ url_for("blog.updatePost", id = p[0].id) }}'>Update Post</a>
