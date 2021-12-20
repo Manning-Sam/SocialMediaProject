@@ -4,7 +4,8 @@ from config import Config
 from flask_login import login_manager
 from flask_migrate import Migrate
 
-db=SQLAlchemy()
+db = SQLAlchemy()
+
 from .blog.routes import blog
 from .auth.routes import auth
 
@@ -27,5 +28,5 @@ db.init_app(app)
 login.init_app(app)
 
 migrate = Migrate(app,db)
-from app import routes
-from app import models
+from . import routes
+from . import models

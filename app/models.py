@@ -3,8 +3,6 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash 
 from flask_login import UserMixin
 
-db = SQLAlchemy()
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False, unique=True)
@@ -32,5 +30,4 @@ class Post(db.Model):
     def __init__(self, title, content, user_id):
         self.title = title 
         self.content = content
-
         self.user_id = user_id

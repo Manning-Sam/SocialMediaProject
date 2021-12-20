@@ -5,13 +5,18 @@
 <div class="instagram-rip-off">
     <div class="card" style="width: 40vw;">
         <div class="card-body">
-          <h5 class="card-title">{{ p.title }}</h5>
-          <p class="card-text">{{ p.content }}</p>
+          <div class="row">
+            <h5 class="col">{{post[1].username}} replied:</h5>
+            <h5 class="col">{{post[0].date_created}}</h5>
+            </div>
+          <h5 class="card-title">{{ post[0].title }}</h5>
+          <p class="card-text">{{ post[0].content }}</p>
         </div>
       </div>
     </div>
-    {% if current_user.id == p.user_id %}
-    <a class='btn btn-secondary' href='{{ url_for("blog.updatePost", id = p.id) }}'>Update Post</a>
+    <a class='btn btn-secondary' href='{{ url_for("blog.createPost", id = post[0].id) }}'>Comment on this Post</a>
+    {% if current_user.id == post[0].user_id %}
+    <a class='btn btn-secondary' href='{{ url_for("blog.updatePost", id = post[0].id) }}'>Update Post</a>
 
     
 <!-- DELETE BUTTON -->
@@ -32,7 +37,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             
-        <form action="{{ url_for('blog.deletePost', id=p.id) }}" method="POST">
+        <form action="{{ url_for('blog.deletePost', id=post[0].id) }}" method="POST">
             <button type="submit" class="btn btn-danger">Delete</button>
         </form>
     </div>
@@ -40,46 +45,60 @@
     </div>
   </div>
 {% endif %}
-{% if p.child %}
-{% for child in child_post  %}
-<div class="instagram-rip-off">
-    <div class="card" style="width: 30vw;">
-        <div class="card-body">
-          <h5 class="card-title">{{ child.title }}</h5>
-          <p class="card-text">{{ child.content }}</p>
+{% if post[0].child %}
+  {% for child in child_post  %}
+
+<div class ="container flex-row-reverse">
+
+
+  <div class="comments">
+      <div class="card" style="width: 30vw;">
+          <div class="card-body">
+            <div class="row">
+            <h5 class="col">{{child[1].username}} replied:</h5>
+            <h5 class="col">{{child[0].date_created}}</h5>
+            </div>
+            <h5 class="card-title">{{ child[0].title }}</h5>
+            <p class="card-text">{{ child[0].content }}</p>
+            {% if child[0].child %}
+            <a class="card text-decoration-none text-dark" href='{{ url_for("blog.individualPost", id=child[0].id) }}' style="width: 40vw;">See replies</a>
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
-    {% if current_user.id == child.user_id %}
-    <a class='btn btn-secondary' href='{{ url_for("blog.updatePost", id = child.id) }}'>Update Post</a>
+      <a class='btn btn-secondary' href='{{ url_for("blog.createPost", id = child[0].id) }}'>Comment on this Post</a>
+      {% if current_user.id == child[0].user_id %}
+      <a class='btn btn-secondary' href='{{ url_for("blog.updatePost", id = child[0].id) }}'>Update Post</a>
 
-    
-<!-- DELETE BUTTON -->
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Post</button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- DELETE BUTTON -->
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Post</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this post? This action cannot be undone.
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+          <form action="{{ url_for('blog.deletePost', id=child[0].id) }}" method="POST">
+              <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+      </div>
         </div>
-        <div class="modal-body">
-          Are you sure you want to delete this post? This action cannot be undone.
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            
-        <form action="{{ url_for('blog.deletePost', id=child.id) }}" method="POST">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    </div>
       </div>
     </div>
   </div>
-{% endfor%}
+    {% endif %}
+  {% endfor %}
 {% endif %}
 
 {% endblock content %}

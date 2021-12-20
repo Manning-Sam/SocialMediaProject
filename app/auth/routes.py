@@ -3,15 +3,17 @@ from werkzeug.security import check_password_hash
 
 
 from .forms import LoginForm, UserInfoForm
-from app.models import User, Post
+from app.models import User
+
+from app.models import db
 
 
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, current_user
 
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
 
-from app.models import db
+
 
 
 @auth.route('/login', methods=['GET',"POST"])
@@ -30,16 +32,16 @@ def logMeIn():
         
       
         login_user(user, remember = remember_me)
-        print(current_user)
-        return redirect(url_for('home'))
-
+        return redirect(url_for('auth.signMeUp'))
     return render_template('login.html', form = form)
 
 @auth.route('/signup', methods=["GET", "POST"])
 def signMeUp():
     my_form = UserInfoForm()
     if request.method == "POST":
+        print("post method requested")
         if my_form.validate():
+            print("form validated")
             
             username = my_form.username.data
             email = my_form.email.data
@@ -47,10 +49,12 @@ def signMeUp():
 
            
             user = User(username, email, password)
+            print("user instanciated")
             
             db.session.add(user)
            
             db.session.commit()
+            print("commited to database")
 
             return redirect(url_for('home'))
 
