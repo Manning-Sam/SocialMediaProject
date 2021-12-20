@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 
 from .forms import CreatePostForm
 
-from app.models import Post, User
+from app.models import Post, User, Likes, Dislikes
 
 blog = Blueprint('blog', __name__, template_folder='blog_templates')
 
@@ -12,7 +12,9 @@ from app.models import db
 @blog.route('/feed')
 def blogHome():
     posts = db.session.query(Post,User).filter(Post.user_id==User.id).filter(Post.user_id!=2).order_by(Post.date_created.desc()).all()
-    return render_template('blog.html', posts = posts)
+    likes = Likes.query.all()
+    dislikes = Dislikes.query.all()
+    return render_template('blog.html', posts = posts, likes = likes, dislikes = dislikes)
 
 @blog.route('/posts/create/<int:id>', methods = ["GET","POST"])
 @login_required
@@ -44,14 +46,16 @@ def createPost(id):
 @login_required
 def individualPost(id):
     post = db.session.query(Post,User).filter(Post.user_id==User.id).filter(Post.id==id).first()
+    likes = Likes.query.all()
+    dislikes = Dislikes.query.all()
     print(post)
     if post[0] is None:
         return redirect(url_for('blogHome'))
     if post[0].child:
         child_post=db.session.query(Post,User).filter(Post.user_id==User.id).filter(Post.parent==id).all()
         print(child_post)
-        return render_template('individualpost.html', post=post, child_post=child_post)
-    return render_template('individualpost.html', post=post)
+        return render_template('individualpost.html', post=post, child_post=child_post, likes = likes, dislikes = dislikes)
+    return render_template('individualpost.html', post=post, likes = likes, dislikes = dislikes)
 
 @blog.route('/blog/update/<int:id>', methods = ["GET","POST"])
 @login_required
@@ -93,5 +97,8 @@ def deletePost(id):
     post.content = "This post was removed by the user"
     post.title = "[Deleted]"
     post.user_id = 2
+    post.likes = 0
+    post.dislikes = 0
+    post.score = 0
     db.session.commit()
     return redirect(url_for('blog.blogHome'))
