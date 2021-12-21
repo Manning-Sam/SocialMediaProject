@@ -133,7 +133,7 @@ def likedPost(id):
     post.score += 5
     db.session.add(like)
     db.session.commit()
-    return redirect(url_for('blog.individualPost', id=id))
+    return redirect(request.referrer)
 
 @blog.route('/blog/d/<int:id>')
 @login_required
@@ -145,26 +145,24 @@ def dlikedPost(id):
     
     db.session.add(dlike)
     db.session.commit()
-    return redirect(url_for('blog.individualPost', id=id))
+    return redirect(request.referrer)
 
 @blog.route('/blog/ul/<int:id>')
 @login_required
 def unlikedPost(id):
-    like = Votes.query.filter(current_user.id==user_id).filter(id==post_id).first()
+    Votes.query.filter(current_user.id==Votes.user_id).filter(id==Votes.post_id).delete()
     post = Post.query.filter_by(id=id).first()
     post.likes -= 1
     post.score -= 5
-    db.session.add(like)
     db.session.commit()
-    return redirect(url_for('blog.individualPost', id=id))    
+    return redirect(request.referrer)
 
 @blog.route('/blog/ud/<int:id>')
 @login_required
 def undlikedPost(id):
-    dlike = Dislikes.query.filter(current_user.id==user_id).filter(id==post_id).first()
+    Dislikes.query.filter(current_user.id==Dislikes.user_id).filter(id==Dislikes.post_id).delete()
     post = Post.query.filter_by(id=id).first()
     post.dislikes -= 1
     post.score += 3
-    db.session.delete(dlike)
     db.session.commit()
-    return redirect(url_for('blog.individualPost', id=id))    
+    return redirect(request.referrer) 
