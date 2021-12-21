@@ -2,14 +2,13 @@
 
 {% block content %}
 
-<h1>This is my Post Feed</h1>
+<p class="fs-1 text-center">This is Your Post Feed!</p>
 <div class="row">
   <a class="col" href='{{ url_for("blog.blogHome")}}'>Latest</a>
   <a class="col" href='{{ url_for("blog.blogliked")}}'>Most Liked</a>
   <a class="col" href='{{ url_for("blog.blogpopular")}}'>Best</a>
-
-
 </div>
+
 {% for p in posts %}
 <div>
     <a class="card text-decoration-none text-dark" href='{{ url_for("blog.individualPost", id=p[0].id) }}' style="width: 40vw;">
@@ -20,37 +19,31 @@
             </div>
           <h5 class="card-title">{{ p[0].title }}</h5>
           <p class="card-text">{{ p[0].content }}</p>
-          <div class="row">
-            {% for l in likes %}
-            {%if p[o].id == l.post_id %}
+
+          {% if p[0].child %}
+          <a class="card-link" href='{{ url_for("blog.individualPost", id = p[0].id) }}' style="width: 40vw;">See replies</a>
+          {% endif %}
+          
+            {% for l in likes if p[0].id == l.post_id %}
             <a class= "col" href="{{url_for('blog.unlikedPost', id = p[0].id)}}"><i class="bi bi-hand-thumbs-up-fill">{{ p[0].likes }} </i></a>
-            {%endif%}
             {%else%}
             <a class= "col" href="{{url_for('blog.likedPost', id = p[0].id)}}"><i class="bi bi-hand-thumbs-up">{{ p[0].likes }} </i></a>
+
             {%endfor%}
 
-            {% for d in dislikes %}
-            {% if p[o].id == d.post_id %}
+            {% for d in dislikes if p[0].id == d.post_id %}
             <a class="col" href="{{url_for('blog.undlikedPost', id = p[0].id)}}"><i class="bi bi-hand-thumbs-down-fill">{{ p[0].dislikes }}</i></a>
-            {% endif %}
-            {% else %}
+            {% else%}
             <a class="col"  href="{{url_for('blog.dlikedPost', id = p[0].id)}}"><i class="bi bi-hand-thumbs-down">{{ p[0].dislikes }}</i></a>
+
             {%endfor%}
-
-
           
-          
-          </div>  
 
         
 
             
 
-          {% if p[0].child %}
-          <div>
-            <a class="card-link" href='{{ url_for("blog.individualPost", id = p[0].id) }}' style="width: 40vw;">See replies</a>
-          </div>
-          {% endif %}
+         
           
           <a class='btn btn-secondary' href='{{ url_for("blog.createPost", id = p[0].id) }}'>Comment on this Post</a>
           {% if current_user.id == p[0].user_id %}

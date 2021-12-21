@@ -132,6 +132,7 @@ def likedPost(id):
     post.likes += 1
     post.score += 5
     db.session.add(like)
+    db.session.commit()
     return redirect(url_for('blog.individualPost', id=id))
 
 @blog.route('/blog/d/<int:id>')
