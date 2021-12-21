@@ -8,7 +8,7 @@ from app.models import User
 from app.models import db
 
 
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user
 
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
