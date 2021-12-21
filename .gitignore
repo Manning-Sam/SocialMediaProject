@@ -1,1 +1,4 @@
-social_media
+sm_venv
+my_venv
+.env
+_pycache_

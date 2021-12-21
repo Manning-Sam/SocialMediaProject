@@ -8,18 +8,17 @@ from app.models import User
 from app.models import db
 
 
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user
 
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
-
-
 
 
 @auth.route('/login', methods=['GET',"POST"])
 def logMeIn():
     form = LoginForm()
     if request.method == "POST" and form.validate():
+        print("validate")
         username = form.username.data
         password = form.password.data
         remember_me = form.remember_me.data
