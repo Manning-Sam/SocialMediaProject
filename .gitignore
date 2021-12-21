@@ -1,2 +1,4 @@
 sm_venv
 my_venv
+.env
+_pycache_
